@@ -15,7 +15,7 @@
  */
 
 module "project_services" {
-  source = "terraform-google-modules/project-factory/google//modules/project_services"
+  source = "terraform-google-modules/project-factory/google/"
   version = "~> 16.0"
   disable_services_on_destroy = var.disable_services_on_destroy
   project_id = var.project_id
