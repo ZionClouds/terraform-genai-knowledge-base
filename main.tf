@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-module "project_services" {
+module "project-factory" {
   source  = "terraform-google-modules/project-factory/google"
   version = "~> 17.0"
   disable_services_on_destroy = var.disable_services_on_destroy
   project_id = var.project_id
-
+  name = "pf-test"
+  billing_account = "01F028-42FAE6-DB0353"
   activate_apis = [
     "aiplatform.googleapis.com",
     "artifactregistry.googleapis.com",
