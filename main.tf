@@ -45,17 +45,17 @@ resource "random_id" "unique_id" {
 }
 
 locals {
-  bucket_main_name         = var.unique_names ? "kb-bucket-${var.project_id}-${random_id.unique_id.hex}" : "knowledge-base-bucket-${var.project_id}"
-  bucket_docs_name         = var.unique_names ? "kb-docs-${var.project_id}-${random_id.unique_id.hex}" : "knowledge-base-docs-${var.project_id}"
-  webhook_name             = var.unique_names ? "kb-webhook-${random_id.unique_id.hex}" : "knowledge-base-webhook"
-  webhook_sa_name          = var.unique_names ? "kb-webhook-sa-${random_id.unique_id.hex}" : "knowledge-base-webhook-sa"
-  trigger_name             = var.unique_names ? "kb-trigger-${random_id.unique_id.hex}" : "knowledge-base-trigger"
-  trigger_sa_name          = var.unique_names ? "kb-trigger-sa-${random_id.unique_id.hex}" : "knowledge-base-trigger-sa"
-  artifact_repo_name       = var.unique_names ? "kb-repo-${random_id.unique_id.hex}" : "knowledge-base-repo"
-  ocr_processor_name       = var.unique_names ? "kb-ocr-processor-${random_id.unique_id.hex}" : "knowledge-base-ocr-processor"
-  docs_index_name          = var.unique_names ? "kb-index-${random_id.unique_id.hex}" : "knowledge-base-index"
-  docs_index_endpoint_name = var.unique_names ? "kb-index-endpoint-${random_id.unique_id.hex}" : "knowledge-base-index-endpoint"
-  firestore_name           = var.unique_names ? "kb-database-${random_id.unique_id.hex}" : "knowledge-base-database"
+  bucket_main_name         = var.unique_names ? "zionai-kb-bucket-${var.project_id}-${random_id.unique_id.hex}" : "knowledge-base-bucket-${var.project_id}"
+  bucket_docs_name         = var.unique_names ? "zionai-kb-docs-${var.project_id}-${random_id.unique_id.hex}" : "knowledge-base-docs-${var.project_id}"
+  webhook_name             = var.unique_names ? "zionai-kb-webhook-${random_id.unique_id.hex}" : "knowledge-base-webhook"
+  webhook_sa_name          = var.unique_names ? "zionai-kb-webhook-sa-${random_id.unique_id.hex}" : "knowledge-base-webhook-sa"
+  trigger_name             = var.unique_names ? "zionai-kb-trigger-${random_id.unique_id.hex}" : "knowledge-base-trigger"
+  trigger_sa_name          = var.unique_names ? "zionai-kb-trigger-sa-${random_id.unique_id.hex}" : "knowledge-base-trigger-sa"
+  artifact_repo_name       = var.unique_names ? "zionai-kb-repo-${random_id.unique_id.hex}" : "knowledge-base-repo"
+  ocr_processor_name       = var.unique_names ? "zionai-kb-ocr-processor-${random_id.unique_id.hex}" : "knowledge-base-ocr-processor"
+  docs_index_name          = var.unique_names ? "zionai-kb-index-${random_id.unique_id.hex}" : "knowledge-base-index"
+  docs_index_endpoint_name = var.unique_names ? "zionai-kb-index-endpoint-${random_id.unique_id.hex}" : "knowledge-base-index-endpoint"
+  firestore_name           = var.unique_names ? "zionai-kb-database-${random_id.unique_id.hex}" : "knowledge-base-database"
 }
 
 #-- Cloud Storage buckets --#
