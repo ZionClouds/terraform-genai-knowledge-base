@@ -15,15 +15,15 @@
  */
 
 terraform {
-  required_version = ">= 0.13"
+  required_version = ">= 0.13.0"
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = "= 5.37.0"
+      version = ">= 5.41, < 7"
     }
     google-beta = {
       source  = "hashicorp/google-beta"
-      version = "= 5.37.0"
+      version = ">= 5.41, < 7"
     }
     archive = {
       source  = "hashicorp/archive"
@@ -35,6 +35,12 @@ terraform {
     }
   }
 
+  provider_meta "google" {
+    module_name = "blueprints/terraform/terraform-google-project-factory/v17.0.0"
+  }
+  provider_meta "google-beta" {
+    module_name = "blueprints/terraform/terraform-google-project-factory/v17.0.0"
+  }
   provider_meta "google" {
     module_name = "blueprints/terraform/genai-knowledge-base/v0.3.0"
   }
