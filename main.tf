@@ -14,32 +14,32 @@
  * limitations under the License.
  */
 
-module "project_services" {
-  # source = "https://github.com/terraform-google-modules/terraform-google-project-factory/tree/master/modules/project_services"
-  source  = "terraform-google-modules/project-factory/google//modules/project_services"
-  version = "~> 17.0"
+# module "project_services" {
+#   # source = "https://github.com/terraform-google-modules/terraform-google-project-factory/tree/master/modules/project_services"
+#   source  = "terraform-google-modules/project-factory/google//modules/project_services"
+#   version = "~> 17.0"
 
-  project_id                  = var.project_id
-  disable_services_on_destroy = true
+#   project_id                  = var.project_id
+#   disable_services_on_destroy = true
 
-  activate_apis = [
-    "aiplatform.googleapis.com",
-    "artifactregistry.googleapis.com",
-    "cloudbuild.googleapis.com",
-    "cloudfunctions.googleapis.com",
-    "cloudresourcemanager.googleapis.com",
-    "compute.googleapis.com",
-    "config.googleapis.com",
-    "documentai.googleapis.com",
-    "eventarc.googleapis.com",
-    "firestore.googleapis.com",
-    "iam.googleapis.com",
-    "run.googleapis.com",
-    "serviceusage.googleapis.com",
-    "storage-api.googleapis.com",
-    "storage.googleapis.com",
-  ]
-}
+#   activate_apis = [
+#     "aiplatform.googleapis.com",
+#     "artifactregistry.googleapis.com",
+#     "cloudbuild.googleapis.com",
+#     "cloudfunctions.googleapis.com",
+#     "cloudresourcemanager.googleapis.com",
+#     "compute.googleapis.com",
+#     "config.googleapis.com",
+#     "documentai.googleapis.com",
+#     "eventarc.googleapis.com",
+#     "firestore.googleapis.com",
+#     "iam.googleapis.com",
+#     "run.googleapis.com",
+#     "serviceusage.googleapis.com",
+#     "storage-api.googleapis.com",
+#     "storage.googleapis.com",
+#   ]
+# }
 
 
 resource "random_id" "unique_id" {
