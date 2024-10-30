@@ -18,7 +18,7 @@
 variable "project_id" {
   description = "The Google Cloud project ID to deploy to"
   type        = string
-  default     = "ai-knowledge-base-440106-k5"
+  default     = "devops-team-nonprod-svc-hw9w"
   validation {
     condition     = var.project_id != ""
     error_message = "Error: project_id is required."
