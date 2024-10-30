@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-module "project_services" {
-  # source = "https://github.com/terraform-google-modules/terraform-google-project-factory/tree/master/modules/project_services"
-  source  = "terraform-google-modules/project-factory/google//modules/project_services"
-  # version = "15.0.0"
+module "project-factory" {
+  # source = "https://github.com/terraform-google-modules/terraform-google-project-factory/tree/master/modules/project-factory"
+  # source  = "terraform-google-modules/project-factory/google//modules/project-factory"
+  source  = "terraform-google-modules/project-factory/google"
+  version = "~> 17.0"
 
   project_id                  = var.project_id
   disable_services_on_destroy = true
@@ -62,7 +63,7 @@ locals {
 
 #-- Cloud Storage buckets --#
 resource "google_storage_bucket" "main" {
-  project                     = module.project_services.project_id
+  project                     = module.project-factory.project_id
   name                        = local.bucket_main_name
   location                    = var.region
   force_destroy               = true
@@ -71,7 +72,7 @@ resource "google_storage_bucket" "main" {
 }
 
 resource "google_storage_bucket" "docs" {
-  project                     = module.project_services.project_id
+  project                     = module.project-factory.project_id
   name                        = local.bucket_docs_name
   location                    = var.region
   force_destroy               = true
@@ -81,7 +82,7 @@ resource "google_storage_bucket" "docs" {
 
 #-- Cloud Function webhook --#
 resource "google_cloudfunctions2_function" "webhook" {
-  project  = module.project_services.project_id
+  project  = module.project-factory.project_id
   name     = local.webhook_name
   location = var.region
   labels   = var.labels
@@ -103,7 +104,7 @@ resource "google_cloudfunctions2_function" "webhook" {
     timeout_seconds       = 300 # 5 minutes
     service_account_email = google_service_account.webhook.email
     environment_variables = {
-      PROJECT_ID        = module.project_services.project_id
+      PROJECT_ID        = module.project-factory.project_id
       VERTEXAI_LOCATION = var.region
       OUTPUT_BUCKET     = google_storage_bucket.main.name
       DOCAI_PROCESSOR   = google_document_ai_processor.ocr.id
@@ -116,7 +117,7 @@ resource "google_cloudfunctions2_function" "webhook" {
 }
 
 resource "google_project_iam_member" "webhook" {
-  project = module.project_services.project_id
+  project = module.project-factory.project_id
   member  = google_service_account.webhook.member
   for_each = toset([
     "roles/aiplatform.serviceAgent", # https://cloud.google.com/iam/docs/service-agents
@@ -126,13 +127,13 @@ resource "google_project_iam_member" "webhook" {
   role = each.key
 }
 resource "google_service_account" "webhook" {
-  project      = module.project_services.project_id
+  project      = module.project-factory.project_id
   account_id   = local.webhook_sa_name
   display_name = "Cloud Functions webhook service account"
 }
 
 resource "google_artifact_registry_repository" "webhook_images" {
-  project       = module.project_services.project_id
+  project       = module.project-factory.project_id
   location      = var.region
   repository_id = local.artifact_repo_name
   format        = "DOCKER"
@@ -160,7 +161,7 @@ resource "google_storage_bucket_object" "webhook_staging" {
 
 #-- Eventarc trigger --#
 resource "google_eventarc_trigger" "trigger" {
-  project         = module.project_services.project_id
+  project         = module.project-factory.project_id
   location        = var.region
   name            = local.trigger_name
   service_account = google_service_account.trigger.email
@@ -184,7 +185,7 @@ resource "google_eventarc_trigger" "trigger" {
 }
 
 resource "google_project_iam_member" "trigger" {
-  project = module.project_services.project_id
+  project = module.project-factory.project_id
   member  = google_service_account.trigger.member
   for_each = toset([
     "roles/eventarc.eventReceiver", # https://cloud.google.com/eventarc/docs/access-control
@@ -193,23 +194,23 @@ resource "google_project_iam_member" "trigger" {
   role = each.key
 }
 resource "google_service_account" "trigger" {
-  project      = module.project_services.project_id
+  project      = module.project-factory.project_id
   account_id   = local.trigger_sa_name
   display_name = "Eventarc trigger service account"
 }
 
 #-- Cloud Storage Eventarc agent --#
 resource "google_project_iam_member" "gcs_account" {
-  project = module.project_services.project_id
+  project = module.project-factory.project_id
   member  = "serviceAccount:${data.google_storage_project_service_account.gcs_account.email_address}"
   role    = "roles/pubsub.publisher" # https://cloud.google.com/pubsub/docs/access-control
 }
 data "google_storage_project_service_account" "gcs_account" {
-  project = module.project_services.project_id
+  project = module.project-factory.project_id
 }
 
 resource "google_project_iam_member" "eventarc_agent" {
-  project = module.project_services.project_id
+  project = module.project-factory.project_id
   member  = "serviceAccount:${google_project_service_identity.eventarc_agent.email}"
   for_each = toset([
     "roles/eventarc.serviceAgent",             # https://cloud.google.com/iam/docs/service-agents
@@ -219,13 +220,13 @@ resource "google_project_iam_member" "eventarc_agent" {
 }
 resource "google_project_service_identity" "eventarc_agent" {
   provider = google-beta
-  project  = module.project_services.project_id
+  project  = module.project-factory.project_id
   service  = "eventarc.googleapis.com"
 }
 
 #-- Document AI --#
 resource "google_document_ai_processor" "ocr" {
-  project      = module.project_services.project_id
+  project      = module.project-factory.project_id
   location     = var.documentai_location
   display_name = local.ocr_processor_name
   type         = "OCR_PROCESSOR"
@@ -233,7 +234,7 @@ resource "google_document_ai_processor" "ocr" {
 
 #-- Firestore --#
 resource "google_firestore_database" "main" {
-  project         = module.project_services.project_id
+  project         = module.project-factory.project_id
   name            = local.firestore_name
   location_id     = var.firestore_location
   type            = "FIRESTORE_NATIVE"
@@ -242,7 +243,7 @@ resource "google_firestore_database" "main" {
 
 #-- Vertex AI Vector Search --#
 resource "google_vertex_ai_index" "docs" {
-  project             = module.project_services.project_id
+  project             = module.project-factory.project_id
   region              = var.region
   display_name        = local.docs_index_name
   index_update_method = "STREAM_UPDATE"
@@ -266,7 +267,7 @@ resource "google_vertex_ai_index" "docs" {
 }
 
 resource "google_vertex_ai_index_endpoint" "docs" {
-  project                 = module.project_services.project_id
+  project                 = module.project-factory.project_id
   region                  = var.region
   display_name            = local.docs_index_endpoint_name
   public_endpoint_enabled = true
