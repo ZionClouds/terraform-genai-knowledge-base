@@ -39,6 +39,7 @@ jobs:
         working-directory: ./
         run: |
           echo "Current working directory: $(pwd)"
+          echo "$(ls)"
           terraform init
 
       - name: Terraform Plan
