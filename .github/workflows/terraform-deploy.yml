@@ -36,11 +36,14 @@ jobs:
           gcloud config set compute/region $REGION
 
       - name: Initialize Terraform
+        working-directory: ./
         run: terraform init
 
       - name: Terraform Plan
+        working-directory: ./
         run: terraform plan -out=plan.tfplan
 
       - name: Terraform Apply
+        working-directory: ./
         if: github.ref == 'refs/heads/main'
         run: terraform apply -input=false plan.tfplan
