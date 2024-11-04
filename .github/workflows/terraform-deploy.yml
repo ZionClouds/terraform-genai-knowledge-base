@@ -23,8 +23,7 @@ jobs:
     steps:
       - uses: 'google-github-actions/auth@v2'
         with:
-          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT_EMAIL}}
-          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          workload_identity_provider: "projects/848342910896/locations/global/workloadIdentityPools/github/providers/my-repo"
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
