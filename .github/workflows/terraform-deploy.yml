@@ -21,6 +21,9 @@ jobs:
       REGION: "us-central1"
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
       - uses: 'google-github-actions/auth@v2'
         with:
           workload_identity_provider: "projects/848342910896/locations/global/workloadIdentityPools/github/providers/my-repo"
