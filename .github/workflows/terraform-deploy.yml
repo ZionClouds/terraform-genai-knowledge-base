@@ -38,9 +38,9 @@ jobs:
       - name: Initialize Terraform
         run: terraform init
 
-      - name: Terraform Plan
-        run: terraform plan 
+      # - name: Terraform Plan
+      #   run: terraform plan 
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
-        run: terraform apply -input=false plan.tfplan
+        run: terraform apply -input=false #plan.tfplan
