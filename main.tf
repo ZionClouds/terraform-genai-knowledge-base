@@ -76,6 +76,7 @@ resource "google_storage_bucket" "main" {
   force_destroy               = true
   uniform_bucket_level_access = true
   labels                      = var.labels
+  depends_on = [time_sleep.wait_for_apis]
 }
 
 resource "google_storage_bucket" "docs" {
@@ -85,6 +86,7 @@ resource "google_storage_bucket" "docs" {
   force_destroy               = true
   uniform_bucket_level_access = true
   labels                      = var.labels
+  depends_on = [time_sleep.wait_for_apis]
 }
 
 #-- Cloud Function webhook --#
@@ -93,6 +95,7 @@ resource "google_cloudfunctions2_function" "webhook" {
   name     = local.webhook_name
   location = var.region
   labels   = var.labels
+  depends_on = [time_sleep.wait_for_apis]
 
   build_config {
     runtime           = "python312"
@@ -132,11 +135,13 @@ resource "google_project_iam_member" "webhook" {
     "roles/documentai.apiUser",      # https://cloud.google.com/document-ai/docs/access-control/iam-roles
   ])
   role = each.key
+  depends_on = [time_sleep.wait_for_apis]
 }
 resource "google_service_account" "webhook" {
   project      = module.project-services.project_id
   account_id   = local.webhook_sa_name
   display_name = "Cloud Functions webhook service account"
+  depends_on = [time_sleep.wait_for_apis]
 }
 
 resource "google_artifact_registry_repository" "webhook_images" {
@@ -145,6 +150,7 @@ resource "google_artifact_registry_repository" "webhook_images" {
   repository_id = local.artifact_repo_name
   format        = "DOCKER"
   labels        = var.labels
+  depends_on = [time_sleep.wait_for_apis]
 }
 
 data "archive_file" "webhook_staging" {
@@ -158,12 +164,14 @@ data "archive_file" "webhook_staging" {
     "__pycache__",
     "env",
   ]
+  depends_on = [time_sleep.wait_for_apis]
 }
 
 resource "google_storage_bucket_object" "webhook_staging" {
   name   = "webhook-staging/${data.archive_file.webhook_staging.output_base64sha256}.zip"
   bucket = google_storage_bucket.main.name
   source = data.archive_file.webhook_staging.output_path
+  depends_on = [time_sleep.wait_for_apis]
 }
 
 #-- Eventarc trigger --#
@@ -189,6 +197,7 @@ resource "google_eventarc_trigger" "trigger" {
       region  = var.region
     }
   }
+  depends_on = [time_sleep.wait_for_apis]
 }
 
 resource "google_project_iam_member" "trigger" {
@@ -199,11 +208,13 @@ resource "google_project_iam_member" "trigger" {
     "roles/run.invoker",            # https://cloud.google.com/run/docs/reference/iam/roles
   ])
   role = each.key
+  depends_on = [time_sleep.wait_for_apis]
 }
 resource "google_service_account" "trigger" {
   project      = module.project-services.project_id
   account_id   = local.trigger_sa_name
   display_name = "Eventarc trigger service account"
+  depends_on = [time_sleep.wait_for_apis]
 }
 
 #-- Cloud Storage Eventarc agent --#
@@ -211,9 +222,11 @@ resource "google_project_iam_member" "gcs_account" {
   project = module.project-services.project_id
   member  = "serviceAccount:${data.google_storage_project_service_account.gcs_account.email_address}"
   role    = "roles/pubsub.publisher" # https://cloud.google.com/pubsub/docs/access-control
+  depends_on = [time_sleep.wait_for_apis]
 }
 data "google_storage_project_service_account" "gcs_account" {
   project = module.project-services.project_id
+  depends_on = [time_sleep.wait_for_apis]
 }
 
 resource "google_project_iam_member" "eventarc_agent" {
@@ -224,11 +237,13 @@ resource "google_project_iam_member" "eventarc_agent" {
     "roles/serviceusage.serviceUsageConsumer", # https://cloud.google.com/service-usage/docs/access-control
   ])
   role = each.key
+  depends_on = [time_sleep.wait_for_apis]
 }
 resource "google_project_service_identity" "eventarc_agent" {
   provider = google-beta
   project  = module.project-services.project_id
   service  = "eventarc.googleapis.com"
+  depends_on = [time_sleep.wait_for_apis]
 }
 
 #-- Document AI --#
@@ -237,6 +252,7 @@ resource "google_document_ai_processor" "ocr" {
   location     = var.documentai_location
   display_name = local.ocr_processor_name
   type         = "OCR_PROCESSOR"
+  depends_on = [time_sleep.wait_for_apis]
 }
 
 #-- Firestore --#
@@ -246,6 +262,7 @@ resource "google_firestore_database" "main" {
   location_id     = var.firestore_location
   type            = "FIRESTORE_NATIVE"
   deletion_policy = "DELETE"
+  depends_on = [time_sleep.wait_for_apis]
 }
 
 #-- Vertex AI Vector Search --#
@@ -279,10 +296,12 @@ resource "google_vertex_ai_index_endpoint" "docs" {
   display_name            = local.docs_index_endpoint_name
   public_endpoint_enabled = true
   labels                  = var.labels
+  depends_on = [time_sleep.wait_for_apis]
 }
 
 resource "google_storage_bucket_object" "index_initial" {
   bucket = google_storage_bucket.main.name
   name   = "vector-search-index/initial-index.json"
   source = "${path.module}/initial-index.json"
+  depends_on = [time_sleep.wait_for_apis]
 }
