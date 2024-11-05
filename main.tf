@@ -25,21 +25,21 @@ module "project-services" {
   disable_services_on_destroy = true
 
   activate_apis = [
-    # "aiplatform.googleapis.com",
-    # "artifactregistry.googleapis.com",
-    # "cloudbuild.googleapis.com",
-    # "cloudfunctions.googleapis.com",
-    # "cloudresourcemanager.googleapis.com",
-    # "compute.googleapis.com",
-    # "config.googleapis.com",
-    # "documentai.googleapis.com",
-    # "eventarc.googleapis.com",
-    # "firestore.googleapis.com",
-    # "iam.googleapis.com",
-    # "run.googleapis.com",
-    # "serviceusage.googleapis.com",
-    # "storage-api.googleapis.com",
-    # "storage.googleapis.com",
+    "aiplatform.googleapis.com",
+    "artifactregistry.googleapis.com",
+    "cloudbuild.googleapis.com",
+    "cloudfunctions.googleapis.com",
+    "cloudresourcemanager.googleapis.com",
+    "compute.googleapis.com",
+    "config.googleapis.com",
+    "documentai.googleapis.com",
+    "eventarc.googleapis.com",
+    "firestore.googleapis.com",
+    "iam.googleapis.com",
+    "run.googleapis.com",
+    "serviceusage.googleapis.com",
+    "storage-api.googleapis.com",
+    "storage.googleapis.com",
   ]
 }
 
