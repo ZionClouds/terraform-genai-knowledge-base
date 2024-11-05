@@ -52,7 +52,6 @@ jobs:
           TF_LOG: DEBUG
         run: |
           echo "Current working directory: $(pwd)"
-          echo "$(ls)"
           terraform init
 
       - name: Terraform Plan
