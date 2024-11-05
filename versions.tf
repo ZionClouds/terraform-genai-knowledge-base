@@ -41,7 +41,7 @@ terraform {
   provider_meta "google-beta" {
     module_name = "blueprints/terraform/terraform-google-project-factory/v17.0.0"
   }
-  provider_meta "google" {
-    module_name = "blueprints/terraform/genai-knowledge-base/v0.3.0"
-  }
+  # provider_meta "google" {
+  #   module_name = "blueprints/terraform/genai-knowledge-base/v0.3.0"
+  # }
 }

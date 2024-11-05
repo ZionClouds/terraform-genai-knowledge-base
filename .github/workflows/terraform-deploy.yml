@@ -38,6 +38,8 @@ jobs:
           gcloud config set compute/region $REGION
 
       - name: Initialize Terraform
+        env:
+          TF_LOG: DEBUG
         run: |
           echo "Current working directory: $(pwd)"
           echo "$(ls)"
