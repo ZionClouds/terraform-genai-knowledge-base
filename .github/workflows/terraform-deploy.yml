@@ -37,6 +37,10 @@ jobs:
           gcloud config set project $PROJECT_ID
           gcloud config set compute/region $REGION
 
+      - name: Show Active Service Account
+        run: gcloud auth list
+        
+
       - name: Remove Terraform cache
         run: rm -rf .terraform
 
