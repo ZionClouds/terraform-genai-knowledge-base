@@ -37,6 +37,12 @@ jobs:
           gcloud config set project $PROJECT_ID
           gcloud config set compute/region $REGION
 
+      - name: Remove Terraform cache
+        run: rm -rf .terraform
+
+      - name: Check connectivity to Terraform Registry
+        run: curl -I https://registry.terraform.io
+      
       - name: Initialize Terraform
         env:
           TF_LOG: DEBUG
