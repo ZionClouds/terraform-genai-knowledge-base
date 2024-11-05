@@ -46,7 +46,7 @@ module "project-services" {
 # Add a delay of 30 seconds after API activation
 resource "time_sleep" "wait_for_apis" {
   depends_on = [module.project-services]
-  create_duration = "30s"
+  create_duration = "60s"
 }
 
 
