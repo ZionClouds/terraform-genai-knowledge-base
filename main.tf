@@ -19,7 +19,7 @@ module "project-services" {
   # source  = "terraform-google-modules/project-factory/google//modules/project-services"
   source  = "terraform-google-modules/project-factory/google//modules/project_services"
   # source = "git::https://github.com/terraform-google-modules/terraform-google-project-factory.git//modules/project_services?ref=master"
-  version = "~> 15.0"
+  version = "15.0.1"
 
   project_id                  = var.project_id
   disable_services_on_destroy = true
