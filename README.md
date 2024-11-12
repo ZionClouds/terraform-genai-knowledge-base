@@ -27,6 +27,7 @@ This solution showcases how to extract question & answer pairs out of documents 
 ## Deployment Duration
 Configuration: 2 mins
 Deployment: 6 mins
+[![Deploy Solution](https://img.shields.io/badge/Deploy-Solution-brightgreen)](https://<cloud-function-url>?project_name=new_project)
 
 ## Cost
 [Cost Details](https://cloud.google.com/products/calculator-legacy#id=dcdd11ca-ca20-428b-86be-1c9b3c651042)
