@@ -60,5 +60,4 @@ jobs:
         run: terraform plan -out=plan.tfplan
 
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main'
-        run: terraform apply "plan.tfplan"
+        run: terraform apply -input=false plan.tfplan
