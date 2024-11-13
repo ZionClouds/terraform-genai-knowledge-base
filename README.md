@@ -29,7 +29,10 @@ Configuration: 2 mins
 Deployment: 6 mins
 
 ## 1-Click Deploy
-[![Deploy Solution](https://img.shields.io/badge/Deploy-Solution-brightgreen)](https://deploy-new-project-848342910896.us-central1.run.app?project_name=new_project)
+<a href="https://deploy-new-project-848342910896.us-central1.run.app?project_name=new_project" target="_blank">
+  <img src="https://img.shields.io/badge/Deploy-Solution-brightgreen" alt="Deploy Solution">
+</a>
+
 
 ## Cost
 [Cost Details](https://cloud.google.com/products/calculator-legacy#id=dcdd11ca-ca20-428b-86be-1c9b3c651042)
