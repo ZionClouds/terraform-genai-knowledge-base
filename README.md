@@ -1,3 +1,12 @@
+
+# ZionAI: Customizable AI Deployment Platform
+
+Welcome to ZionAI, an AI deployment and app-building platform designed to help AI teams quickly create and deploy custom applications. 
+ZionAI automates the setup of essential cloud infrastructure on GCP, tailored for AI and ML workflows, while providing a customizable frontend 
+for building specialized AI applications.
+
+---
+
 # Generative AI Knowledge Base
 
 ## Description
@@ -5,7 +14,7 @@
 Fine tune an LLM model to answer questions from your documents.
 
 ### Detailed
-This solution showcases how to extract question & answer pairs out of documents using Generative AI. It provides an end-to-end demonstration of QA extraction and fine-tuning of a large language model (LLM) on Vertex AI. Along the way, the solution utilizes Document AI Character Recognition (OCR), Firestore, Vector Search, Vertex AI Studio, and Cloud Functions.
+The ZionAI project showcases how to extract question & answer pairs out of documents using Generative AI. It provides an end-to-end demonstration of QA extraction and fine-tuning of a large language model (LLM) on Vertex AI. Along the way, the solution utilizes Document AI Character Recognition (OCR), Firestore, Vector Search, Vertex AI Studio, and Cloud Functions.
 
 ## Architecture
 ![Knowledge Base using Generative AI](assets/architecture.svg)
@@ -111,3 +120,14 @@ information on contributing to this module.
 ## Security Disclosures
 
 Please see our [security disclosure process](./SECURITY.md).
+
+## Customizing the ZionAI Platform for Your Needs
+
+1. **Frontend Customization**: Use the default minimalist UI or configure it to match specific project needs with ZionAI’s customization options.
+2. **Deployment Workflow**: Utilize the 1-click deployment option or customize the Terraform workflow to support unique app features.
+
+## Example Use Cases
+ZionAI is versatile and can support various AI projects such as:
+- **Custom Recommendation Engines**
+- **Dynamic Content Generators**
+- **Data-driven Interactive Dashboards**
