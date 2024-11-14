@@ -91,9 +91,36 @@ def process_document(args: dict) -> None:
     output_bucket = args["output_bucket"]
     index_id = args["index_id"]
 
-    # Core logic remains the same
+    # Initialize database and handle event entry
     db = firestore.Client(database=database)
     doc = db.document("documents", filename.replace("/", "-"))
+    
+    if is_event_processed(doc, event_id):
+        return
+
+    create_or_update_event_entry(doc, event_id, input_bucket, filename, mime_type, time_uploaded)
+
+    # Process document text
+    pages = get_document_text_pages(input_bucket, filename, mime_type, docai_processor_id, output_bucket)
+    doc.update({"pages": pages})
+
+    # Index pages and generate Q&As
+    index_pages(index_id, filename, pages)
+    document_entries = generate_qa_for_pages(filename, pages)
+
+    # Save Q&As and write tuning dataset
+    save_qa_entries(db, document_entries)
+    write_tuning_dataset(db, output_bucket)
+
+
+def is_event_processed(doc, event_id: str) -> bool:
+    """Check if an event has already been processed."""
+    entry = doc.get().to_dict() or {}
+    return entry.get("event_id") == event_id
+
+
+def create_or_update_event_entry(doc, event_id, input_bucket, filename, mime_type, time_uploaded):
+    """Create or update an event entry in Firestore."""
     event_entry = {
         "event_id": event_id,
         "bucket": input_bucket,
@@ -101,32 +128,28 @@ def process_document(args: dict) -> None:
         "mime_type": mime_type,
         "time_uploaded": time_uploaded,
     }
-    if (entry := doc.get().to_dict() or {}) and entry.get("event_id") == event_id:
-        # We've already processed this event, this is probably an event retry.
-        return
-
     if doc.get().exists:
         doc.update(event_entry)
     else:
         doc.create(event_entry)
 
+
+def get_document_text_pages(input_bucket: str, filename: str, mime_type: str, docai_processor_id: str, output_bucket: str) -> list:
+    """Get document text pages using Document AI."""
     input_gcs_uri = f"gs://{input_bucket}/{filename}"
-    print(f"📖 {event_id}: Getting document text")
-    pages = list(get_document_text(input_gcs_uri, mime_type, docai_processor_id, output_bucket))
-    doc.update({"pages": pages})
+    return list(get_document_text(input_gcs_uri, mime_type, docai_processor_id, output_bucket))
 
-    print(f"🗂️ {event_id}: Indexing pages into Vector Search")
-    index_pages(index_id, filename, pages)
 
-    print(f"🔍 {event_id}: Generating Q&As with model ({len(pages)} pages)")
+def generate_qa_for_pages(filename: str, pages: list) -> list:
+    """Generate Q&A entries for document pages."""
     with multiprocessing.Pool(len(pages)) as pool:
-        event_pages = [
-            {"filename": filename, "page_number": i, "text": page} for i, page in enumerate(pages)
-        ]
+        event_pages = [{"filename": filename, "page_number": i, "text": page} for i, page in enumerate(pages)]
         page_entries = pool.map(process_page, event_pages)
-        document_entries = list(itertools.chain.from_iterable(page_entries))
+        return list(itertools.chain.from_iterable(page_entries))
 
-    print(f"🗃️ {event_id}: Saving Q&As to Firestore ({len(document_entries)} entries)")
+
+def save_qa_entries(db, document_entries: list):
+    """Save Q&A entries to Firestore."""
     for entry in document_entries:
         doc = db.document("dataset", entry["question"].replace("/", " "))
         if doc.get().exists:
@@ -134,9 +157,6 @@ def process_document(args: dict) -> None:
         else:
             doc.create(entry)
 
-    print(f"📝 {event_id}: Writing tuning dataset: gs://{output_bucket}/dataset.jsonl")
-    dataset_size = write_tuning_dataset(db, output_bucket)
-    print(f"✅ {event_id}: Done! {dataset_size=}")
 
 
 
