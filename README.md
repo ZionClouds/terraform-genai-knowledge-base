@@ -16,6 +16,10 @@ for building specialized AI applications.
   <img src="https://img.shields.io/badge/View_Deployment-Status-blue" alt="View Deployment Status">
 </a>
 
+<a href="https://codeclimate.com/github/ZionClouds/terraform-genai-knowledge-base" target="_blank">
+  <img src="https://img.shields.io/badge/maintainability-C-9933FF" alt="View Deployment Status">
+</a>
+
 
 # Generative AI Knowledge Base
 
