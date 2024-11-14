@@ -59,45 +59,39 @@ def on_cloud_event(event: CloudEvent) -> None:
         event: CloudEvent object.
     """
     try:
-        process_document(
-            event_id=event.data["id"],
-            input_bucket=event.data["bucket"],
-            filename=event.data["name"],
-            mime_type=event.data["contentType"],
-            time_uploaded=datetime.fromisoformat(event.data["timeCreated"]),
-            docai_processor_id=os.environ["DOCAI_PROCESSOR"],
-            database=os.environ["DATABASE"],
-            output_bucket=os.environ["OUTPUT_BUCKET"],
-            index_id=os.environ["INDEX_ID"],
-        )
+        process_document({
+            "event_id": event.data["id"],
+            "input_bucket": event.data["bucket"],
+            "filename": event.data["name"],
+            "mime_type": event.data["contentType"],
+            "time_uploaded": datetime.fromisoformat(event.data["timeCreated"]),
+            "docai_processor_id": os.environ["DOCAI_PROCESSOR"],
+            "database": os.environ["DATABASE"],
+            "output_bucket": os.environ["OUTPUT_BUCKET"],
+            "index_id": os.environ["INDEX_ID"],
+        })
     except Exception as e:
         logging.exception(e, stack_info=True)
 
 
-def process_document(
-    event_id: str,
-    input_bucket: str,
-    filename: str,
-    mime_type: str,
-    time_uploaded: datetime,
-    docai_processor_id: str,
-    database: str,
-    output_bucket: str,
-    index_id: str,
-) -> None:
+def process_document(args: dict) -> None:
     """Process a new document.
 
     Args:
-        event_id: ID of the event.
-        input_bucket: Name of the input bucket.
-        filename: Name of the input file.
-        mime_type: MIME type of the input file.
-        time_uploaded: Time the input file was uploaded.
-        docai_processor_id: ID of the Document AI processor.
-        database: Name of the Firestore database.
-        output_bucket: Name of the output bucket.
-        index_id: ID of the Vector Search index.
+        args: Dictionary containing the parameters required for processing the document.
     """
+    # Unpack arguments
+    event_id = args["event_id"]
+    input_bucket = args["input_bucket"]
+    filename = args["filename"]
+    mime_type = args["mime_type"]
+    time_uploaded = args["time_uploaded"]
+    docai_processor_id = args["docai_processor_id"]
+    database = args["database"]
+    output_bucket = args["output_bucket"]
+    index_id = args["index_id"]
+
+    # Core logic remains the same
     db = firestore.Client(database=database)
     doc = db.document("documents", filename.replace("/", "-"))
     event_entry = {
@@ -145,6 +139,7 @@ def process_document(
     print(f"✅ {event_id}: Done! {dataset_size=}")
 
 
+
 def process_page(event_page: dict) -> list[dict[str, str]]:
     """Generate questions and answers for a single page of a document.
 
@@ -180,9 +175,6 @@ def get_document_text(
 ) -> Iterator[str]:
     """Perform Optical Character Recognition (OCR) with Document AI on a Cloud Storage files.
 
-    For more information, see:
-        https://cloud.google.com/document-ai/docs/process-documents-ocr
-
     Args:
         input_file: GCS URI of the document file.
         mime_type: MIME type of the document file.
@@ -199,7 +191,6 @@ def get_document_text(
     # We're using batch_process_documents instead of process_document because
     # process_document has a quota limit of 15 pages per document, while
     # batch_process_documents has a quota limit of 500 pages per request.
-    #   https://cloud.google.com/document-ai/quotas#general_processors
     operation = documentai_client.batch_process_documents(
         request=documentai.BatchProcessRequest(
             name=processor_id,
@@ -269,9 +260,6 @@ def index_pages(index_id: str, filename: str, pages: list[str]) -> None:
 def generate_questions(text: str) -> list[dict[str, str]]:
     """Extract questions & answers using a large language model (LLM).
 
-    For more information, see:
-        https://cloud.google.com/vertex-ai/docs/generative-ai/learn/models
-
     Args:
         text: the text to generate questions and answers for
 
@@ -303,9 +291,6 @@ def generate_questions(text: str) -> list[dict[str, str]]:
 
 def write_tuning_dataset(db: firestore.Client, output_bucket: str) -> int:
     """Write the tuning dataset to Cloud Storage.
-
-    For more information on the tuning dataset file format:
-        https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini-supervised-tuning-about
 
     Args:
         db: Firestore client.
