@@ -13,7 +13,7 @@ for building specialized AI applications.
 </a>
 
 <a href="https://github.com/ZionClouds/terraform-genai-knowledge-base/actions" target="_blank">
-  <img src="https://img.shields.io/badge/View-Deployment-blue" alt="View Deployment Status">
+  <img src="https://img.shields.io/badge/View_Deployment-Status-blue" alt="View Deployment Status">
 </a>
 
 
@@ -27,7 +27,7 @@ Fine tune an LLM model to answer questions from your documents.
 The ZionAI project showcases how to extract question & answer pairs out of documents using Generative AI. It provides an end-to-end demonstration of QA extraction and fine-tuning of a large language model (LLM) on Vertex AI. Along the way, the solution utilizes Document AI Character Recognition (OCR), Firestore, Vector Search, Vertex AI Studio, and Cloud Functions.
 
 ## Architecture
-![Knowledge Base using Generative AI](assets/architecture.svg)
+![Knowledge Base using Generative AI](assets/architecture-genai-kb.svg)
 
 - Uploading a new document triggers the webhook Cloud Function.
 - Document AI extracts the text from the document file.
