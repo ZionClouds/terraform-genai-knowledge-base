@@ -13,7 +13,7 @@ for building specialized AI applications.
 </a>
 
 <a href="https://github.com/ZionClouds/terraform-genai-knowledge-base/actions" target="_blank">
-  <img src="https://img.shields.io/badge/View-Deployment-brightgreen" alt="View Deployment Status">
+  <img src="https://img.shields.io/badge/View-Deployment-blue" alt="View Deployment Status">
 </a>
 
 
