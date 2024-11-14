@@ -7,6 +7,16 @@ for building specialized AI applications.
 
 ---
 
+<!-- ## Click Deploy -->
+<a href="https://deploy-new-project-848342910896.us-central1.run.app?project_name=new_project" target="_blank">
+  <img src="https://img.shields.io/badge/Deploy-Solution-brightgreen" alt="Deploy Solution">
+</a>
+
+<a href="https://github.com/ZionClouds/terraform-genai-knowledge-base/actions" target="_blank">
+  <img src="https://img.shields.io/badge/Deploy-Solution-brightgreen" alt="View Deployment Status">
+</a>
+
+
 # Generative AI Knowledge Base
 
 ## Description
@@ -36,11 +46,6 @@ The ZionAI project showcases how to extract question & answer pairs out of docum
 ## Deployment Duration
 Configuration: 2 mins
 Deployment: 6 mins
-
-## 1-Click Deploy
-<a href="https://deploy-new-project-848342910896.us-central1.run.app?project_name=new_project" target="_blank">
-  <img src="https://img.shields.io/badge/Deploy-Solution-brightgreen" alt="Deploy Solution">
-</a>
 
 
 ## Cost
