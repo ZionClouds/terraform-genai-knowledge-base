@@ -91,17 +91,33 @@ def process_document(args: dict) -> None:
     output_bucket = args["output_bucket"]
     index_id = args["index_id"]
 
+    # Prepare dictionaries to reduce argument count
+    event_data = {
+        "event_id": event_id,
+        "input_bucket": input_bucket,
+        "filename": filename,
+        "mime_type": mime_type,
+        "time_uploaded": time_uploaded
+    }
+    docai_config = {
+        "input_bucket": input_bucket,
+        "filename": filename,
+        "mime_type": mime_type,
+        "docai_processor_id": docai_processor_id,
+        "output_bucket": output_bucket
+    }
+
     # Initialize database and handle event entry
     db = firestore.Client(database=database)
     doc = db.document("documents", filename.replace("/", "-"))
-    
+
     if is_event_processed(doc, event_id):
         return
 
-    create_or_update_event_entry(doc, event_id, input_bucket, filename, mime_type, time_uploaded)
+    create_or_update_event_entry(doc, event_data)
 
     # Process document text
-    pages = get_document_text_pages(input_bucket, filename, mime_type, docai_processor_id, output_bucket)
+    pages = get_document_text_pages(docai_config)
     doc.update({"pages": pages})
 
     # Index pages and generate Q&As
@@ -119,29 +135,42 @@ def is_event_processed(doc, event_id: str) -> bool:
     return entry.get("event_id") == event_id
 
 
-def create_or_update_event_entry(doc, event_id, input_bucket, filename, mime_type, time_uploaded):
-    """Create or update an event entry in Firestore."""
-    event_entry = {
-        "event_id": event_id,
-        "bucket": input_bucket,
-        "filename": filename,
-        "mime_type": mime_type,
-        "time_uploaded": time_uploaded,
-    }
+def create_or_update_event_entry(doc, event_data: dict):
+    """Create or update an event entry in Firestore.
+
+    Args:
+        doc: Firestore document reference.
+        event_data: Dictionary containing event-specific data.
+    """
     if doc.get().exists:
-        doc.update(event_entry)
+        doc.update(event_data)
     else:
-        doc.create(event_entry)
+        doc.create(event_data)
 
 
-def get_document_text_pages(input_bucket: str, filename: str, mime_type: str, docai_processor_id: str, output_bucket: str) -> list:
-    """Get document text pages using Document AI."""
-    input_gcs_uri = f"gs://{input_bucket}/{filename}"
-    return list(get_document_text(input_gcs_uri, mime_type, docai_processor_id, output_bucket))
+def get_document_text_pages(docai_config: dict) -> list:
+    """Get document text pages using Document AI.
+
+    Args:
+        docai_config: Dictionary containing Document AI configuration.
+
+    Returns:
+        A list of text pages from the document.
+    """
+    input_gcs_uri = f"gs://{docai_config['input_bucket']}/{docai_config['filename']}"
+    return list(get_document_text(input_gcs_uri, docai_config["mime_type"], docai_config["docai_processor_id"], docai_config["output_bucket"]))
 
 
 def generate_qa_for_pages(filename: str, pages: list) -> list:
-    """Generate Q&A entries for document pages."""
+    """Generate Q&A entries for document pages.
+
+    Args:
+        filename: The name of the document file.
+        pages: List of text pages in the document.
+
+    Returns:
+        A list of dictionaries containing questions and answers.
+    """
     with multiprocessing.Pool(len(pages)) as pool:
         event_pages = [{"filename": filename, "page_number": i, "text": page} for i, page in enumerate(pages)]
         page_entries = pool.map(process_page, event_pages)
@@ -149,15 +178,18 @@ def generate_qa_for_pages(filename: str, pages: list) -> list:
 
 
 def save_qa_entries(db, document_entries: list):
-    """Save Q&A entries to Firestore."""
+    """Save Q&A entries to Firestore.
+
+    Args:
+        db: Firestore client.
+        document_entries: List of dictionaries containing questions and answers.
+    """
     for entry in document_entries:
         doc = db.document("dataset", entry["question"].replace("/", " "))
         if doc.get().exists:
             doc.update(entry)
         else:
             doc.create(entry)
-
-
 
 
 def process_page(event_page: dict) -> list[dict[str, str]]:
