@@ -28,7 +28,24 @@ jobs:
         with:
           workload_identity_provider: "projects/848342910896/locations/global/workloadIdentityPools/github/providers/my-repo"
           service_account: "my-service-account@devops-team-nonprod-svc-hw9w.iam.gserviceaccount.com"
-          
+
+      - name: Set up Terraform Linter (TFLint)
+        run: |
+          curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+          tflint --version
+
+      - name: Run TFLint
+        run: tflint
+
+      - name: Set up Python Linter (Flake8)
+        run: |
+          sudo apt-get install python3-pip -y
+          pip install flake8
+          flake8 --version
+
+      - name: Run Python Linter
+        run: flake8 .
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
@@ -41,7 +58,6 @@ jobs:
 
       - name: Show Active Service Account
         run: gcloud auth list
-        
 
       - name: Remove Terraform cache
         run: rm -rf .terraform
