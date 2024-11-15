@@ -47,7 +47,7 @@ variable "firestore_location" {
 variable "disable_services_on_destroy" {
   description = "Whether project services will be disabled when the resources are destroyed."
   type        = bool
-  default     = false
+  default     = true
 }
 
 # Used for testing.
