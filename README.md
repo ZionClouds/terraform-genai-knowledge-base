@@ -8,15 +8,15 @@ for building specialized AI applications.
 ---
 
 <!-- ## Click Deploy -->
-<a href="https://deploy-new-project-848342910896.us-central1.run.app?project_name=terraform-genai-knowledge-base" target="_blank">
+<a href="https://deploy-new-project-848342910896.us-central1.run.app?project_name=ZionAI-GCP-Knowledge-Base" target="_blank">
   <img src="https://img.shields.io/badge/Deploy-Solution-brightgreen" alt="Deploy Solution">
 </a>
 
-<a href="https://github.com/ZionClouds/terraform-genai-knowledge-base/actions" target="_blank">
+<a href="https://github.com/ZionClouds/ZionAI-GCP-Knowledge-Base/actions" target="_blank">
   <img src="https://img.shields.io/badge/View_Deployment-Status-blue" alt="View Deployment Status">
 </a>
 
-<a href="https://codeclimate.com/github/ZionClouds/terraform-genai-knowledge-base" target="_blank">
+<a href="https://codeclimate.com/github/ZionClouds/ZionAI-GCP-Knowledge-Base" target="_blank">
   <img src="https://img.shields.io/badge/maintainability-C-9933FF" alt="View Deployment Status">
 </a>
 
