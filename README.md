@@ -8,7 +8,7 @@ for building specialized AI applications.
 ---
 
 <!-- ## Click Deploy -->
-<a href="https://deploy-new-project-848342910896.us-central1.run.app?project_name=new_project" target="_blank">
+<a href="https://deploy-new-project-848342910896.us-central1.run.app?project_name=terraform-genai-knowledge-base" target="_blank">
   <img src="https://img.shields.io/badge/Deploy-Solution-brightgreen" alt="Deploy Solution">
 </a>
 
