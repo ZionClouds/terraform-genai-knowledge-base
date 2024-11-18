@@ -77,7 +77,7 @@ jobs:
         python-version: ['3.12']
 
     env:
-      PROJECT_ID: jss-22p1-test
+      PROJECT_ID: devops-team-nonprod-svc-hw9w
       ACTIONS_RUNNER_DEBUG: true
       ACTIONS_STEP_DEBUG: true
 
@@ -100,8 +100,8 @@ jobs:
         name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          workload_identity_provider: projects/886556137211/locations/global/workloadIdentityPools/github-actions/providers/github-actions
-          service_account: github-actions@jss-22p1-test.iam.gserviceaccount.com
+          workload_identity_provider: "projects/848342910896/locations/global/workloadIdentityPools/github/providers/my-repo"
+          service_account: "my-service-account@devops-team-nonprod-svc-hw9w.iam.gserviceaccount.com"
 
       - name: Cache dependencies
         uses: actions/cache@v4

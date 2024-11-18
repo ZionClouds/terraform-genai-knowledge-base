@@ -58,3 +58,13 @@ output "docs_index_endpoint_id" {
   value       = google_vertex_ai_index_endpoint.docs.id
   description = "The ID of the docs index endpoint"
 }
+
+output "index_endpoint_id" {
+  value       = google_vertex_ai_index_endpoint.docs.id
+  description = "The ID of the index endpoint deployed."
+}
+
+output "deployed_index_id" {
+  value       = google_vertex_ai_deployed_index.docs.id
+  description = "The ID of the deployed index."
+}
