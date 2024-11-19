@@ -299,24 +299,24 @@ resource "google_vertex_ai_index_endpoint" "docs" {
   #depends_on = [time_sleep.wait_for_apis]
 }
 
-# Deploy the Index to the Endpoint
-resource "google_vertex_ai_deployed_index" "docs" {
-  project        = module.project-services.project_id
-  region         = var.region
-  index_endpoint = google_vertex_ai_index_endpoint.docs.id
-  display_name   = "deployed-index-${local.docs_index_name}"
-  index          = google_vertex_ai_index.docs.id
-  labels         = var.labels
+# # Deploy the Index to the Endpoint
+# resource "google_vertex_ai_deployed_index" "docs" {
+#   project        = module.project-services.project_id
+#   region         = var.region
+#   index_endpoint = google_vertex_ai_index_endpoint.docs.id
+#   display_name   = "deployed-index-${local.docs_index_name}"
+#   index          = google_vertex_ai_index.docs.id
+#   labels         = var.labels
 
-  dedicated_resources {
-    machine_spec {
-      machine_type = "n1-standard-4"  # Adjust based on your workload
-    }
-    min_replica_count = 1  # Adjust replicas based on traffic
-  }
+#   dedicated_resources {
+#     machine_spec {
+#       machine_type = "n1-standard-4"  # Adjust based on your workload
+#     }
+#     min_replica_count = 1  # Adjust replicas based on traffic
+#   }
 
-  depends_on = [google_vertex_ai_index.docs, google_vertex_ai_index_endpoint.docs]
-}
+#   depends_on = [google_vertex_ai_index.docs, google_vertex_ai_index_endpoint.docs]
+# }
 
 resource "google_storage_bucket_object" "index_initial" {
   bucket = google_storage_bucket.main.name
